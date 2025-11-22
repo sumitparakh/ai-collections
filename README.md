@@ -1,4 +1,4 @@
-# AI Samples 🤖
+# AI Collections 🤖
 
 A comprehensive collection of high-quality AI code samples, learning resources, and proof-of-concept implementations. This repository is designed to help developers learn, experiment, and build with modern AI technologies.
 
