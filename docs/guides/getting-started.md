@@ -11,9 +11,9 @@ This repository contains:
 
 ## Quick Navigation
 
-- 📚 [Learning Resources](../learning/README.md) - Start here if you're learning
+- 📚 [Learning Resources](../../learning/README.md) - Start here if you're learning
 - 📖 [Documentation](../README.md) - Guides and references
-- 🔬 [POCs](../pocs/README.md) - Working examples and implementations
+- 🔬 [POCs](../../pocs/README.md) - Working examples and implementations
 
 ## Prerequisites
 
@@ -40,12 +40,12 @@ cd ai-samples
 ### 2. Choose Your Path
 
 #### For Learning
-Navigate to the [learning](../learning/README.md) directory and choose a topic:
-- Start with [Fundamentals](../learning/fundamentals/README.md) if you're new
+Navigate to the [learning](../../learning/README.md) directory and choose a topic:
+- Start with [Fundamentals](../../learning/fundamentals/README.md) if you're new
 - Jump to specific topics if you have experience
 
 #### For Building
-Head to the [POCs](../pocs/README.md) directory:
+Head to the [POCs](../../pocs/README.md) directory:
 - Find a relevant POC
 - Follow its specific setup instructions
 - Experiment and modify
@@ -116,9 +116,9 @@ cargo build  # In specific POC directories
 
 ## Next Steps
 
-- Explore the [Learning](../learning/README.md) section
+- Explore the [Learning](../../learning/README.md) section
 - Review [Best Practices](../best-practices/README.md)
-- Try a [POC](../pocs/README.md)
+- Try a [POC](../../pocs/README.md)
 - Read the [Architecture](../architecture/README.md) patterns
 
 ## Contributing
