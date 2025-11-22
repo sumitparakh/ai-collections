@@ -210,6 +210,70 @@ Many examples use paid APIs. Always:
 - Provide cost estimation when possible
 - Note free tier limitations
 
+## AI Workflow Integration
+
+This repository uses an intelligent workflow system to keep documentation synchronized with code changes.
+
+### How It Works
+
+1. **Post-commit hook** automatically detects changes and updates context files in `.ai-workflow/state/`
+2. **Copilot Chat** reads these context files to understand recent repository changes
+3. **Custom prompts** in `.github/prompts/` guide specific documentation tasks
+4. **Conversation memory** preserves context across chat sessions (if git user.email is configured)
+
+### Before Responding to ANY User Request
+
+**CRITICAL**: Always check these context files FIRST:
+
+1. **Recent Changes**: Read `#file:.ai-workflow/state/recent_changes.md` to see what was modified
+2. **Documentation Status**: Check `#file:.ai-workflow/state/docs_status.md` for out-of-sync docs
+3. **Last Sync**: Review `#file:.ai-workflow/state/last_sync.md` for timing context
+
+### Response Priority
+
+1. **Handle the user's immediate request FIRST** - Answer their question or complete their task
+2. **Then append documentation suggestions** - If state files show pending updates, add a section at the END:
+   ```markdown
+   ## 📝 Documentation Update Suggestions
+   
+   Based on recent changes, consider updating:
+   - [Specific file and reason]
+   ```
+
+### Custom Prompts Available
+
+Users can reference these prompts for specific tasks:
+
+- `#file:.github/prompts/menu.md` - List all available commands
+- `#file:.github/prompts/update-docs.md` - Get documentation update suggestions
+- `#file:.github/prompts/search-memory.md` - Search conversation history
+- `#file:.github/prompts/summarize-changes.md` - Summarize recent commits
+- `#file:.github/prompts/check-status.md` - Check documentation sync status
+
+### Conflict Handling
+
+If `.ai-workflow/state/docs_status.md` shows conflicts:
+- **Warn the user** before suggesting edits to those files
+- **Explain the conflict** (e.g., "This file was manually edited recently")
+- **Ask for confirmation** before proceeding with changes
+- **Never overwrite** without user approval
+
+### Memory Preservation
+
+When conversations involve important decisions or patterns:
+- **Suggest saving**: "Would you like to save this conversation for future reference?"
+- **Provide command**: `python .ai-workflow/scripts/capture_session.py`
+- **Note**: Memory only works if `git config user.email` is set
+
+### Workflow State Files
+
+All state files are auto-generated and gitignored. Never edit these manually:
+- `.ai-workflow/state/recent_changes.md` - What changed since last commit
+- `.ai-workflow/state/docs_status.md` - Which docs need updates
+- `.ai-workflow/state/last_sync.md` - Last processing timestamp
+- `.ai-workflow/state/change_manifest.json` - Detailed change data
+- `.ai-workflow/memory/` - Conversation history (private)
+
 ## Key Files to Reference
 
 - `README.md` - Repository overview and navigation
@@ -217,3 +281,4 @@ Many examples use paid APIs. Always:
 - `docs/guides/getting-started.md` - Prerequisites and first steps
 - `docs/guides/setup.md` - Complete environment setup
 - `.gitignore` - What not to commit (especially secrets)
+- `.ai-workflow/README.md` - Workflow system documentation

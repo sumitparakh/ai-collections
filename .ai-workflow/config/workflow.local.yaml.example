@@ -1,0 +1,17 @@
+# Local Workflow Configuration
+# Copy this file to workflow.local.yaml and customize
+# workflow.local.yaml is gitignored and won't be committed
+
+# Override memory settings
+memory:
+  retention_days: 14
+  enabled: true
+
+# Override context settings
+context:
+  max_size_kb: 10
+  commits_to_track: 10
+
+# Override logging
+logging:
+  level: INFO

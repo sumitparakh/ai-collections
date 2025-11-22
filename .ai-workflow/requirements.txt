@@ -1,0 +1,8 @@
+# Python dependencies for AI Workflow System
+# Install with: pip install -r requirements.txt
+
+# Git integration for change detection and history
+gitpython>=3.1.40
+
+# YAML parsing for configuration files
+PyYAML>=6.0.1

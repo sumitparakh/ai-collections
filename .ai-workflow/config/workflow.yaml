@@ -1,0 +1,57 @@
+# AI Workflow Configuration Template
+# Copy to workflow.local.yaml and customize for your setup
+
+# Memory settings
+memory:
+  # Number of days to retain conversation history (default: 14)
+  retention_days: 14
+  
+  # Enable/disable memory preservation
+  enabled: true
+  
+  # Maximum size for individual session files (KB)
+  max_session_size_kb: 100
+
+# Context file settings
+context:
+  # Maximum size for context files before summarization (KB)
+  max_size_kb: 10
+  
+  # Number of commits to include in change summaries
+  commits_to_track: 10
+  
+  # Enable automatic summarization when size limits exceeded
+  auto_summarize: true
+
+# Documentation targets
+documentation:
+  # Files to monitor for updates
+  tracked_files:
+    - README.md
+    - CONTRIBUTING.md
+    - .github/copilot-instructions.md
+    - docs/**/*.md
+    - learning/**/*.md
+    - pocs/**/*.md
+  
+  # Detect conflicts when these files are manually modified
+  conflict_detection: true
+
+# Feature toggles
+features:
+  # Enable change detection on post-commit
+  auto_detect_changes: true
+  
+  # Generate context files automatically
+  auto_generate_context: true
+  
+  # Enable conflict warnings
+  conflict_warnings: true
+
+# Logging
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR
+  level: INFO
+  
+  # Keep last N log entries
+  max_entries: 100

@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+#
+# Post-commit hook for AI workflow
+# Automatically detects changes and generates context files for Copilot
+#
+
+# Get repository root
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ $? -ne 0 ]; then
+    echo "Error: Not a git repository"
+    exit 0  # Don't fail the commit
+fi
+
+# Check if workflow directory exists
+WORKFLOW_DIR="$REPO_ROOT/.ai-workflow"
+if [ ! -d "$WORKFLOW_DIR" ]; then
+    echo "AI Workflow not initialized. Run: bash .ai-workflow/setup.sh"
+    exit 0
+fi
+
+# Check for git user.email
+USER_EMAIL=$(git config user.email 2>/dev/null)
+if [ -z "$USER_EMAIL" ]; then
+    echo "⚠️  Git user.email not configured. Workflow skipped."
+    echo "   To enable: git config user.email \"your@email.com\""
+    exit 0
+fi
+
+# Log file
+LOG_FILE="$WORKFLOW_DIR/state/workflow.log"
+mkdir -p "$(dirname "$LOG_FILE")"
+
+# Function to log messages
+log_message() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+}
+
+# Function to keep only last N log entries
+trim_log() {
+    local max_entries=100
+    if [ -f "$LOG_FILE" ]; then
+        local line_count=$(wc -l < "$LOG_FILE")
+        if [ "$line_count" -gt "$max_entries" ]; then
+            tail -n "$max_entries" "$LOG_FILE" > "$LOG_FILE.tmp"
+            mv "$LOG_FILE.tmp" "$LOG_FILE"
+        fi
+    fi
+}
+
+log_message "Post-commit hook triggered"
+
+# Export repository path for Python scripts
+export REPO_PATH="$REPO_ROOT"
+
+# Check if Python is available
+if ! command -v python3 &> /dev/null; then
+    log_message "ERROR: python3 not found"
+    echo "⚠️  Python 3 not found. Install Python to use AI workflow."
+    exit 0
+fi
+
+# Run change detection
+log_message "Running change detection..."
+python3 "$WORKFLOW_DIR/scripts/detect_changes.py" 2>&1 | tee -a "$LOG_FILE"
+
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    log_message "ERROR: Change detection failed"
+    echo "⚠️  Change detection failed. Check $LOG_FILE for details."
+    exit 0  # Don't fail the commit
+fi
+
+# Generate context files
+log_message "Generating context files..."
+python3 "$WORKFLOW_DIR/scripts/generate_context.py" 2>&1 | tee -a "$LOG_FILE"
+
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    log_message "ERROR: Context generation failed"
+    echo "⚠️  Context generation failed. Check $LOG_FILE for details."
+    exit 0  # Don't fail the commit
+fi
+
+log_message "Post-commit hook completed successfully"
+
+# Trim log file
+trim_log
+
+# Notify user
+echo "✅ AI Workflow: Documentation context updated"
+echo "   Use Copilot Chat commands to review changes:"
+echo "   - #file:.github/prompts/check-status.md"
+echo "   - #file:.github/prompts/update-docs.md"
+
+exit 0

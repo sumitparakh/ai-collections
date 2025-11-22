@@ -92,3 +92,8 @@ site/
 .coverage
 coverage/
 .pytest_cache/
+
+# AI Workflow System
+.ai-workflow/memory/
+.ai-workflow/state/
+.ai-workflow/config/*.local.yaml
